@@ -19,7 +19,7 @@ public:
   struct Vertex
   {
     // 位置
-    GLfloat position[2];
+    GLfloat position[3];
   };
 
   // コンストラクタ
