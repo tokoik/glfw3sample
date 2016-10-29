@@ -20,12 +20,15 @@ class Window
   // 図形の正規化デバイス座標系上での位置
   GLfloat location[2];
 
+  // キーボードの状態
+  int keyStatus;
+
 public:
 
   // コンストラクタ
   Window(int width = 640, int height = 480, const char *title = "Hello!")
     : window(glfwCreateWindow(width, height, title, NULL, NULL))
-    , scale(100.0f), location{ 0, 0 }
+    , scale(100.0f), location{ 0, 0 }, keyStatus(GLFW_RELEASE)
   {
     if (window == NULL)
     {
@@ -55,6 +58,9 @@ public:
     // マウスホイール操作時に呼び出す処理の登録
     glfwSetScrollCallback(window, wheel);
 
+    // キーボード操作時に呼び出す処理の登録
+    glfwSetKeyCallback(window, keyboard);
+
     // このインスタンスの this ポインタを記録しておく
     glfwSetWindowUserPointer(window, this);
 
@@ -73,7 +79,20 @@ public:
   explicit operator bool()
   {
     // イベントを取り出す
-    glfwWaitEvents();
+    if (keyStatus == GLFW_RELEASE)
+      glfwWaitEvents();
+    else
+      glfwPollEvents();
+
+    // キーボードの状態を調べる
+    if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
+      location[0] -= 2.0f / size[0];
+    else if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_RELEASE)
+      location[0] += 2.0f / size[0];
+    if (glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_RELEASE)
+      location[1] -= 2.0f / size[1];
+    else if (glfwGetKey(window, GLFW_KEY_UP) != GLFW_RELEASE)
+      location[1] += 2.0f / size[1];
 
     // マウスの左ボタンの状態を調べる
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE)
@@ -88,7 +107,7 @@ public:
     }
 
     // ウィンドウを閉じる必要がなければ true を返す
-    return !glfwWindowShouldClose(window);
+    return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
   }
 
   // ダブルバッファリング
@@ -131,6 +150,20 @@ public:
     {
       // ワールド座標系に対するデバイス座標系の拡大率を更新する
       instance->scale += static_cast<GLfloat>(y);
+    }
+  }
+
+  // キーボード操作時の処理
+  static void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods)
+  {
+    // このインスタンスの this ポインタを得る
+    Window *const
+      instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+
+    if (instance != NULL)
+    {
+      // キーの状態を保存する
+      instance->keyStatus = action;
     }
   }
 
