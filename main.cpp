@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Window.h"
+#include "Matrix.h"
 #include "Shape.h"
 
 // シェーダオブジェクトのコンパイル結果を表示する
@@ -202,9 +203,7 @@ int main()
   const GLuint program(loadProgram("point.vert", "point.frag"));
 
   // uniform 変数の場所を取得する
-  const GLint sizeLoc(glGetUniformLocation(program, "size"));
-  const GLint scaleLoc(glGetUniformLocation(program, "scale"));
-  const GLint locationLoc(glGetUniformLocation(program, "location"));
+  const GLint modelLoc(glGetUniformLocation(program, "model"));
 
   // 図形データを作成する
   std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
@@ -218,10 +217,20 @@ int main()
     // シェーダプログラムの使用開始
     glUseProgram(program);
 
+    // 拡大縮小の変換行列を求める
+    const GLfloat *const size(window.getSize());
+    const GLfloat scale(window.getScale() * 2.0f);
+    const Matrix scaling(Matrix::scale(scale / size[0], scale / size[1], 1.0f));
+
+    // 平行移動の変換行列を求める
+    const GLfloat *const position(window.getLocation());
+    const Matrix translation(Matrix::translate(position[0], position[1], 0.0f));
+
+    // モデル変換行列を求める
+    const Matrix model(translation * scaling);
+
     // uniform 変数に値を設定する
-    glUniform2fv(sizeLoc, 1, window.getSize());
-    glUniform1f(scaleLoc, window.getScale());
-    glUniform2fv(locationLoc, 1, window.getLocation());
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data());
 
     // 図形を描画する
     shape->draw();
