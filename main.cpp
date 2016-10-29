@@ -165,13 +165,21 @@ GLuint loadProgram(const char *vert, const char *frag)
   return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
 
-// 矩形の頂点の位置
-constexpr Object::Vertex rectangleVertex[] =
+// 八面体の頂点の位置
+constexpr Object::Vertex octahedronVertex[] =
 {
-  { -0.5f, -0.5f },
-  {  0.5f, -0.5f },
-  {  0.5f,  0.5f },
-  { -0.5f,  0.5f }
+  {  0.0f,  1.0f,  0.0f },
+  { -1.0f,  0.0f,  0.0f },
+  {  0.0f, -1.0f,  0.0f },
+  {  1.0f,  0.0f,  0.0f },
+  {  0.0f,  1.0f,  0.0f },
+  {  0.0f,  0.0f,  1.0f },
+  {  0.0f, -1.0f,  0.0f },
+  {  0.0f,  0.0f, -1.0f },
+  { -1.0f,  0.0f,  0.0f },
+  {  0.0f,  0.0f,  1.0f },
+  {  1.0f,  0.0f,  0.0f },
+  {  0.0f,  0.0f, -1.0f }
 };
 
 int main()
@@ -207,7 +215,7 @@ int main()
   const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
   // 図形データを作成する
-  std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
+  std::unique_ptr<const Shape> shape(new Shape(3, 12, octahedronVertex));
 
   // ウィンドウが開いている間繰り返す
   while (window)
