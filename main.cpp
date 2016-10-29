@@ -10,6 +10,7 @@
 #include "Shape.h"
 #include "ShapeIndex.h"
 #include "SolidShapeIndex.h"
+#include "SolidShape.h"
 
 // シェーダオブジェクトのコンパイル結果を表示する
 //   shader: シェーダオブジェクト名
@@ -175,11 +176,15 @@ constexpr Object::Vertex solidCubeVertex[] =
   { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.1f },
   { -1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.1f },
   { -1.0f,  1.0f,  1.0f,  0.1f,  0.8f,  0.1f },
+  { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.1f },
+  { -1.0f,  1.0f,  1.0f,  0.1f,  0.8f,  0.1f },
   { -1.0f,  1.0f, -1.0f,  0.1f,  0.8f,  0.1f },
 
   // 裏
   {  1.0f, -1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
   { -1.0f, -1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+  { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+  {  1.0f, -1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
   { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
   {  1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
 
@@ -187,11 +192,15 @@ constexpr Object::Vertex solidCubeVertex[] =
   { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.8f },
   {  1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.8f },
   {  1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.8f },
+  { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.8f },
+  {  1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.8f },
   { -1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.8f },
 
   // 右
   {  1.0f, -1.0f,  1.0f,  0.1f,  0.1f,  0.8f },
   {  1.0f, -1.0f, -1.0f,  0.1f,  0.1f,  0.8f },
+  {  1.0f,  1.0f, -1.0f,  0.1f,  0.1f,  0.8f },
+  {  1.0f, -1.0f,  1.0f,  0.1f,  0.1f,  0.8f },
   {  1.0f,  1.0f, -1.0f,  0.1f,  0.1f,  0.8f },
   {  1.0f,  1.0f,  1.0f,  0.1f,  0.1f,  0.8f },
 
@@ -199,11 +208,15 @@ constexpr Object::Vertex solidCubeVertex[] =
   { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.1f },
   { -1.0f,  1.0f,  1.0f,  0.8f,  0.1f,  0.1f },
   {  1.0f,  1.0f,  1.0f,  0.8f,  0.1f,  0.1f },
+  { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.1f },
+  {  1.0f,  1.0f,  1.0f,  0.8f,  0.1f,  0.1f },
   {  1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.1f },
 
   // 前
   { -1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
   {  1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
+  {  1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
+  { -1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
   {  1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
   { -1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.1f }
 };
@@ -211,12 +224,12 @@ constexpr Object::Vertex solidCubeVertex[] =
 // 六面体の面を塗りつぶす三角形の頂点のインデックス
 constexpr GLuint solidCubeIndex[] =
 {
-   0,  1,  2,  0,  2,  3, // 左
-   4,  5,  6,  4,  6,  7, // 裏
-   8,  9, 10,  8, 10, 11, // 下
-  12, 13, 14, 12, 14, 15, // 右
-  16, 17, 18, 16, 18, 19, // 上
-  20, 21, 22, 20, 22, 23  // 前
+   0,  1,  2,  3,  4,  5, // 左
+   6,  7,  8,  9, 10, 11, // 裏
+  12, 13, 14, 15, 16, 17, // 下
+  18, 19, 20, 21, 22, 23, // 右
+  24, 25, 26, 27, 28, 29, // 上
+  30, 31, 32, 33, 34, 35  // 前
 };
 
 int main()
@@ -252,7 +265,7 @@ int main()
   const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
   // 図形データを作成する
-  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 24, solidCubeVertex, 36, solidCubeIndex));
+  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
 
   // ウィンドウが開いている間繰り返す
   while (window)
