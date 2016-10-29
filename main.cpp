@@ -97,6 +97,7 @@ GLuint createProgram(const char *vsrc, const char *fsrc)
 
   // プログラムオブジェクトをリンクする
   glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "color");
   glBindFragDataLocation(program, 0, "fragment");
   glLinkProgram(program);
 
@@ -169,14 +170,14 @@ GLuint loadProgram(const char *vert, const char *frag)
 // 六面体の頂点の位置
 constexpr Object::Vertex cubeVertex[] =
 {
-  { -1.0f, -1.0f, -1.0f },  // (0)
-  { -1.0f, -1.0f,  1.0f },  // (1)
-  { -1.0f,  1.0f,  1.0f },  // (2)
-  { -1.0f,  1.0f, -1.0f },  // (3)
-  {  1.0f,  1.0f, -1.0f },  // (4)
-  {  1.0f, -1.0f, -1.0f },  // (5)
-  {  1.0f, -1.0f,  1.0f },  // (6)
-  {  1.0f,  1.0f,  1.0f }   // (7)
+  { -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,  0.0f },  // (0)
+  { -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.8f },  // (1)
+  { -1.0f,  1.0f,  1.0f,  0.0f,  0.8f,  0.0f },  // (2)
+  { -1.0f,  1.0f, -1.0f,  0.0f,  0.8f,  0.8f },  // (3)
+  {  1.0f,  1.0f, -1.0f,  0.8f,  0.0f,  0.0f },  // (4)
+  {  1.0f, -1.0f, -1.0f,  0.8f,  0.0f,  0.8f },  // (5)
+  {  1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.0f },  // (6)
+  {  1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.8f }   // (7)
 };
 
 // 六面体の稜線の両端点のインデックス

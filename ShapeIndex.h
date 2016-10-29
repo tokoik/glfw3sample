@@ -23,7 +23,7 @@ public:
   //   indexcount: 頂点のインデックスの要素数
   //   index: 頂点のインデックスを格納した配列
   ShapeIndex(GLint size, GLsizei vertexcount, const Object::Vertex *vertex,
-    GLint indexcount, const GLuint *index)
+    GLsizei indexcount, const GLuint *index)
     : Shape(size, vertexcount, vertex, indexcount, index)
     , indexcount(indexcount)
   {
