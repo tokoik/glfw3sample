@@ -169,6 +169,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="ShapeIndex.h" />
+    <ClInclude Include="SolidShape.h" />
     <ClInclude Include="SolidShapeIndex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

@@ -22,6 +22,7 @@
 		7D7AF85E1222C8CC003A0434 /* opengl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = opengl.icns; sourceTree = "<group>"; };
 		7D8EB8F41DC4EBE5005DBD9B /* ShapeIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ShapeIndex.h; sourceTree = "<group>"; };
 		7D8EB8F51DC4EE0E005DBD9B /* SolidShapeIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SolidShapeIndex.h; sourceTree = "<group>"; };
+		7D8EB8F61DC4F0E7005DBD9B /* SolidShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SolidShape.h; sourceTree = "<group>"; };
 		7DC92CC11DC4DEC6001D876D /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Object.h; sourceTree = "<group>"; };
 		7DC92CC21DC4DEFC001D876D /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Shape.h; sourceTree = "<group>"; };
 		7DC92CC31DC4DFD9001D876D /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Window.h; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 				7DC92CC21DC4DEFC001D876D /* Shape.h */,
 				7D8EB8F41DC4EBE5005DBD9B /* ShapeIndex.h */,
 				7D8EB8F51DC4EE0E005DBD9B /* SolidShapeIndex.h */,
+				7D8EB8F61DC4F0E7005DBD9B /* SolidShape.h */,
 				7D0AFB491D9D548F00FC004C /* point.vert */,
 				7D0AFB481D9D548F00FC004C /* point.frag */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
