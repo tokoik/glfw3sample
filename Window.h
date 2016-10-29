@@ -14,12 +14,15 @@ class Window
   // ワールド座標系に対するデバイス座標系の拡大率
   GLfloat scale;
 
+  // 図形の正規化デバイス座標系上での位置
+  GLfloat location[2];
+
 public:
 
   // コンストラクタ
   Window(int width = 640, int height = 480, const char *title = "Hello!")
     : window(glfwCreateWindow(width, height, title, NULL, NULL))
-    , scale(100.0f)
+    , scale(100.0f), location{ 0, 0 }
   {
     if (window == NULL)
     {
@@ -66,6 +69,14 @@ public:
     // イベントを取り出す
     glfwWaitEvents();
 
+    // マウスカーソルの位置を取得する
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+
+    // マウスカーソルの正規化デバイス座標系上での位置を求める
+    location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+    location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+
     // ウィンドウを閉じる必要がなければ true を返す
     return !glfwWindowShouldClose(window);
   }
@@ -104,4 +115,7 @@ public:
 
   // ワールド座標系に対するデバイス座標系の拡大率を取り出す
   GLfloat getScale() const { return scale; }
+
+  // 位置を取り出す
+  const GLfloat *getLocation() const { return location; }
 };
