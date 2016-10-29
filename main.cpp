@@ -1,5 +1,6 @@
 ﻿#include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -103,6 +104,63 @@ GLuint createProgram(const char *vsrc, const char *fsrc)
   return 0;
 }
 
+// シェーダのソースファイルを読み込む
+//   name: シェーダのソースファイル名
+//   buffer: 読み込んだソースファイルのテキスト
+bool readShaderSource(const char *name, std::vector<GLchar> &buffer)
+{
+  // ファイル名が NULL だった
+  if (name == NULL) return false;
+
+  // ソースファイルを開く
+  std::ifstream file(name, std::ios::binary);
+  if (file.fail())
+  {
+    // 開けなかった
+    std::cerr << "Error: Can't open source file: " << name << std::endl;
+    return false;
+  }
+
+  // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
+  file.seekg(0L, std::ios::end);
+  GLsizei length = static_cast<GLsizei>(file.tellg());
+
+  // ファイルサイズのメモリを確保
+  buffer.resize(length + 1);
+
+  // ファイルを先頭から読み込む
+  file.seekg(0L, std::ios::beg);
+  file.read(buffer.data(), length);
+  buffer[length] = '\0';
+
+  if (file.fail())
+  {
+    // うまく読み込めなかった
+    std::cerr << "Error: Could not read source file: " << name << std::endl;
+    file.close();
+    return false;
+  }
+
+  // 読み込み成功
+  file.close();
+  return true;
+}
+
+// シェーダのソースファイルを読み込んでプログラムオブジェクトを作成する
+//   vert: バーテックスシェーダのソースファイル名
+//   frag: フラグメントシェーダのソースファイル名
+GLuint loadProgram(const char *vert, const char *frag)
+{
+  // シェーダのソースファイルを読み込む
+  std::vector<GLchar> vsrc;
+  const bool vstat(readShaderSource(vert, vsrc));
+  std::vector<GLchar> fsrc;
+  const bool fstat(readShaderSource(frag, fsrc));
+
+  // プログラムオブジェクトを作成する
+  return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
+}
+
 int main()
 {
   // GLFW を初期化する
@@ -148,26 +206,8 @@ int main()
   // 背景色を指定する
   glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-  // バーテックスシェーダのソースプログラム
-  static constexpr GLchar vsrc[] =
-    "#version 150 core\n"
-    "in vec4 position;\n"
-    "void main(void)\n"
-    "{\n"
-    "  gl_Position = position;\n"
-    "}\n";
-
-  // フラグメントシェーダのソースプログラム
-  static constexpr GLchar fsrc[] =
-    "#version 150 core\n"
-    "out vec4 fragment;\n"
-    "void main(void)\n"
-    "{\n"
-    "  fragment = vec4(1.0, 0.0, 0.0, 1.0);\n"
-    "}\n";
-
   // プログラムオブジェクトを作成する
-  const GLuint program(createProgram(vsrc, fsrc));
+  const GLuint program(loadProgram("point.vert", "point.frag"));
 
   // ウィンドウが開いている間繰り返す
   while (glfwWindowShouldClose(window) == GL_FALSE)
