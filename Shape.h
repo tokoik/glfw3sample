@@ -23,8 +23,11 @@ public:
   //   size: 頂点の位置の次元
   //   vertexcount: 頂点の数
   //   vertex: 頂点属性を格納した配列
-  Shape(GLint size, GLsizei vertexcount, const Object::Vertex *vertex)
-    : object(new Object(size, vertexcount, vertex))
+  //   indexcount: 頂点のインデックスの要素数
+  //   index: 頂点のインデックスを格納した配列
+  Shape(GLint size, GLsizei vertexcount, const Object::Vertex *vertex,
+    GLsizei indexcount = 0, const GLuint *index = NULL)
+    : object(new Object(size, vertexcount, vertex, indexcount, index))
     , vertexcount(vertexcount)
   {
   }

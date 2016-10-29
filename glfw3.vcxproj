@@ -168,6 +168,7 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="ShapeIndex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
