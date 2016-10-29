@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 //
 // ウィンドウ関連の処理
@@ -69,13 +72,17 @@ public:
     // イベントを取り出す
     glfwWaitEvents();
 
-    // マウスカーソルの位置を取得する
-    double x, y;
-    glfwGetCursorPos(window, &x, &y);
+    // マウスの左ボタンの状態を調べる
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE)
+    {
+      // マウスの左ボタンが押されていたらマウスカーソルの位置を取得する
+      double x, y;
+      glfwGetCursorPos(window, &x, &y);
 
-    // マウスカーソルの正規化デバイス座標系上での位置を求める
-    location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
-    location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+      // マウスカーソルの正規化デバイス座標系上での位置を求める
+      location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+      location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+    }
 
     // ウィンドウを閉じる必要がなければ true を返す
     return !glfwWindowShouldClose(window);
