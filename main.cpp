@@ -220,9 +220,9 @@ int main()
 
     // 透視投影変換行列を求める
     const GLfloat *const size(window.getSize());
-    const GLfloat scale(window.getScale() * 2.0f);
-    const GLfloat w(size[0] / scale), h(size[1] / scale);
-    const Matrix projection(Matrix::frustum(-w, w, -h, h, 1.0f, 10.0f));
+    const GLfloat fovy(window.getScale() * 0.01f);
+    const GLfloat aspect(size[0] / size[1]);
+    const Matrix projection(Matrix::perspective(fovy, aspect, 1.0f, 10.0f));
 
     // モデル変換行列を求める
     const GLfloat *const location(window.getLocation());

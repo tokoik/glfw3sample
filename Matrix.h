@@ -233,4 +233,25 @@ public:
 
     return t;
   }
+
+  // 画角を指定して透視投影変換行列を作成する
+  static Matrix perspective(GLfloat fovy, GLfloat aspect,
+    GLfloat zNear, GLfloat zFar)
+  {
+    Matrix t;
+    const GLfloat dz(zFar - zNear);
+
+    if (dz != 0.0f)
+    {
+      t.loadIdentity();
+      t[ 5] = 1.0f / tan(fovy * 0.5f);
+      t[ 0] = t[5] / aspect;
+      t[10] = -(zFar + zNear) / dz;
+      t[11] = -1.0f;
+      t[14] = -2.0f * zFar * zNear / dz;
+      t[15] = 0.0f;
+    }
+
+    return t;
+  }
 };
