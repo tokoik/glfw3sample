@@ -218,11 +218,11 @@ int main()
     // シェーダプログラムの使用開始
     glUseProgram(program);
 
-    // 直交投影変換行列を求める
+    // 透視投影変換行列を求める
     const GLfloat *const size(window.getSize());
     const GLfloat scale(window.getScale() * 2.0f);
     const GLfloat w(size[0] / scale), h(size[1] / scale);
-    const Matrix projection(Matrix::orthogonal(-w, w, -h, h, 1.0f, 10.0f));
+    const Matrix projection(Matrix::frustum(-w, w, -h, h, 1.0f, 10.0f));
 
     // モデル変換行列を求める
     const GLfloat *const location(window.getLocation());
