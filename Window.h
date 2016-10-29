@@ -52,6 +52,9 @@ public:
     // ウィンドウのサイズ変更時に呼び出す処理の登録
     glfwSetWindowSizeCallback(window, resize);
 
+    // マウスホイール操作時に呼び出す処理の登録
+    glfwSetScrollCallback(window, wheel);
+
     // このインスタンスの this ポインタを記録しておく
     glfwSetWindowUserPointer(window, this);
 
@@ -114,6 +117,20 @@ public:
       // 開いたウィンドウのサイズを保存する
       instance->size[0] = static_cast<GLfloat>(width);
       instance->size[1] = static_cast<GLfloat>(height);
+    }
+  }
+
+  // マウスホイール操作時の処理
+  static void wheel(GLFWwindow *window, double x, double y)
+  {
+    // このインスタンスの this ポインタを得る
+    Window *const
+      instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+
+    if (instance != NULL)
+    {
+      // ワールド座標系に対するデバイス座標系の拡大率を更新する
+      instance->scale += static_cast<GLfloat>(y);
     }
   }
 
