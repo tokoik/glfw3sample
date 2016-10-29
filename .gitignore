@@ -1,0 +1,47 @@
+#
+# for Linux
+#
+glfw3
+a.out
+core
+*.o
+*.dep
+#
+# for Mac
+#
+.DS_Store
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+#
+# for Windows
+#
+/Debug/
+/Release/
+/x64/
+/packages/
+Thumbs.db
+*.com
+*.exe
+*.VC.VC.opendb
+*.VC.db
+#
+# anothre stuff
+#
+/.vs/
+/.vscode/
+*~
+*.bak
+*.tmp
+*.swp
