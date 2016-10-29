@@ -168,28 +168,55 @@ GLuint loadProgram(const char *vert, const char *frag)
   return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
 
-// 六面体の頂点の位置
-constexpr Object::Vertex cubeVertex[] =
+// 面ごとに色を変えた六面体の頂点属性
+constexpr Object::Vertex solidCubeVertex[] =
 {
-  { -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,  0.0f },  // (0)
-  { -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.8f },  // (1)
-  { -1.0f,  1.0f,  1.0f,  0.0f,  0.8f,  0.0f },  // (2)
-  { -1.0f,  1.0f, -1.0f,  0.0f,  0.8f,  0.8f },  // (3)
-  {  1.0f,  1.0f, -1.0f,  0.8f,  0.0f,  0.0f },  // (4)
-  {  1.0f, -1.0f, -1.0f,  0.8f,  0.0f,  0.8f },  // (5)
-  {  1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.0f },  // (6)
-  {  1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.8f }   // (7)
+  // 左
+  { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.1f },
+  { -1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.1f },
+  { -1.0f,  1.0f,  1.0f,  0.1f,  0.8f,  0.1f },
+  { -1.0f,  1.0f, -1.0f,  0.1f,  0.8f,  0.1f },
+
+  // 裏
+  {  1.0f, -1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+  { -1.0f, -1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+  { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+  {  1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.8f },
+
+  // 下
+  { -1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.8f },
+  {  1.0f, -1.0f, -1.0f,  0.1f,  0.8f,  0.8f },
+  {  1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.8f },
+  { -1.0f, -1.0f,  1.0f,  0.1f,  0.8f,  0.8f },
+
+  // 右
+  {  1.0f, -1.0f,  1.0f,  0.1f,  0.1f,  0.8f },
+  {  1.0f, -1.0f, -1.0f,  0.1f,  0.1f,  0.8f },
+  {  1.0f,  1.0f, -1.0f,  0.1f,  0.1f,  0.8f },
+  {  1.0f,  1.0f,  1.0f,  0.1f,  0.1f,  0.8f },
+
+  // 上
+  { -1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.1f },
+  { -1.0f,  1.0f,  1.0f,  0.8f,  0.1f,  0.1f },
+  {  1.0f,  1.0f,  1.0f,  0.8f,  0.1f,  0.1f },
+  {  1.0f,  1.0f, -1.0f,  0.8f,  0.1f,  0.1f },
+
+  // 前
+  { -1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
+  {  1.0f, -1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
+  {  1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.1f },
+  { -1.0f,  1.0f,  1.0f,  0.8f,  0.8f,  0.1f }
 };
 
 // 六面体の面を塗りつぶす三角形の頂点のインデックス
 constexpr GLuint solidCubeIndex[] =
 {
-  0, 1, 2, 0, 2, 3, // 左
-  0, 3, 4, 0, 4, 5, // 裏
-  0, 5, 6, 0, 6, 1, // 下
-  7, 6, 5, 7, 5, 4, // 右
-  7, 4, 3, 7, 3, 2, // 上
-  7, 2, 1, 7, 1, 6  // 前
+   0,  1,  2,  0,  2,  3, // 左
+   4,  5,  6,  4,  6,  7, // 裏
+   8,  9, 10,  8, 10, 11, // 下
+  12, 13, 14, 12, 14, 15, // 右
+  16, 17, 18, 16, 18, 19, // 上
+  20, 21, 22, 20, 22, 23  // 前
 };
 
 int main()
@@ -225,7 +252,7 @@ int main()
   const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
   // 図形データを作成する
-  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 8, cubeVertex, 36, solidCubeIndex));
+  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 24, solidCubeVertex, 36, solidCubeIndex));
 
   // ウィンドウが開いている間繰り返す
   while (window)
