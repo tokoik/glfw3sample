@@ -203,7 +203,7 @@ int main()
   const GLuint program(loadProgram("point.vert", "point.frag"));
 
   // uniform 変数の場所を取得する
-  const GLint modelLoc(glGetUniformLocation(program, "model"));
+  const GLint modelviewLoc(glGetUniformLocation(program, "modelview"));
 
   // 図形データを作成する
   std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
@@ -229,8 +229,14 @@ int main()
     // モデル変換行列を求める
     const Matrix model(translation * scaling);
 
+    // ビュー変換行列を求める
+    const Matrix view(Matrix::lookat(0.0f, 0.0f, 0.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f));
+
+    // モデルビュー変換行列を求める
+    const Matrix modelview(view * model);
+
     // uniform 変数に値を設定する
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data());
+    glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
 
     // 図形を描画する
     shape->draw();

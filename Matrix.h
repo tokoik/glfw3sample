@@ -129,4 +129,58 @@ public:
 
     return t;
   }
+
+  // ビュー変換行列を作成する
+  static Matrix lookat(
+    GLfloat ex, GLfloat ey, GLfloat ez,   // 視点の位置
+    GLfloat gx, GLfloat gy, GLfloat gz,   // 目標点の位置
+    GLfloat ux, GLfloat uy, GLfloat uz)   // 上方向のベクトル
+  {
+    // 平行移動の変換行列
+    const Matrix tv(translate(-ex, -ey, -ez));
+
+    // t 軸 = e - g
+    const GLfloat tx(ex - gx);
+    const GLfloat ty(ey - gy);
+    const GLfloat tz(ez - gz);
+
+    // r 軸 = u x t 軸
+    const GLfloat rx(uy * tz - uz * ty);
+    const GLfloat ry(uz * tx - ux * tz);
+    const GLfloat rz(ux * ty - uy * tx);
+
+    // s 軸 = t 軸 x r 軸
+    const GLfloat sx(ty * rz - tz * ry);
+    const GLfloat sy(tz * rx - tx * rz);
+    const GLfloat sz(tx * ry - ty * rx);
+
+    // s 軸の長さのチェック
+    const GLfloat s2(sx * sx + sy * sy + sz * sz);
+    if (s2 == 0.0f) return tv;
+
+    // 回転の変換行列
+    Matrix rv;
+    rv.loadIdentity();
+
+    // r 軸を正規化して配列変数に格納
+    const GLfloat r(sqrt(rx * rx + ry * ry + rz * rz));
+    rv[ 0] = rx / r;
+    rv[ 4] = ry / r;
+    rv[ 8] = rz / r;
+
+    // s 軸を正規化して配列変数に格納
+    const GLfloat s(sqrt(s2));
+    rv[ 1] = sx / s;
+    rv[ 5] = sy / s;
+    rv[ 9] = sz / s;
+
+    // t 軸を正規化して配列変数に格納
+    const GLfloat t(sqrt(tx * tx + ty * ty + tz * tz));
+    rv[ 2] = tx / t;
+    rv[ 6] = ty / t;
+    rv[10] = tz / t;
+
+    // 視点の平行移動の変換行列に視線の回転の変換行列を乗じる
+    return rv * tv;
+  }
 };
