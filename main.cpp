@@ -2,8 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <memory>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Shape.h"
 
 // シェーダオブジェクトのコンパイル結果を表示する
 //   shader: シェーダオブジェクト名
@@ -136,7 +138,7 @@ bool readShaderSource(const char *name, std::vector<GLchar> &buffer)
   if (file.fail())
   {
     // うまく読み込めなかった
-    std::cerr << "Error: Could not read source file: " << name << std::endl;
+    std::cerr << "Error: Could not read souce file: " << name << std::endl;
     file.close();
     return false;
   }
@@ -160,6 +162,15 @@ GLuint loadProgram(const char *vert, const char *frag)
   // プログラムオブジェクトを作成する
   return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
+
+// 矩形の頂点の位置
+constexpr Object::Vertex rectangleVertex[] =
+{
+  { -0.5f, -0.5f },
+  {  0.5f, -0.5f },
+  {  0.5f,  0.5f },
+  { -0.5f,  0.5f }
+};
 
 int main()
 {
@@ -209,6 +220,9 @@ int main()
   // プログラムオブジェクトを作成する
   const GLuint program(loadProgram("point.vert", "point.frag"));
 
+  // 図形データを作成する
+  std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
+
   // ウィンドウが開いている間繰り返す
   while (glfwWindowShouldClose(window) == GL_FALSE)
   {
@@ -218,9 +232,8 @@ int main()
     // シェーダプログラムの使用開始
     glUseProgram(program);
 
-    //
-    // ここで描画処理を行う
-    //
+    // 図形を描画する
+    shape->draw();
 
     // カラーバッファを入れ替える
     glfwSwapBuffers(window);
