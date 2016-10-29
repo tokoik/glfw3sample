@@ -8,6 +8,9 @@ class Window
   // ウィンドウの識別子
   GLFWwindow *const window;
 
+  // 縦横比
+  GLfloat aspect;
+
 public:
 
   // コンストラクタ
@@ -38,6 +41,9 @@ public:
 
     // ウィンドウのサイズ変更時に呼び出す処理の登録
     glfwSetWindowSizeCallback(window, resize);
+
+    // このインスタンスの this ポインタを記録しておく
+    glfwSetWindowUserPointer(window, this);
 
     // 開いたウィンドウの初期設定
     resize(window, width, height);
@@ -76,5 +82,19 @@ public:
     
     // フレームバッファ全体をビューポートにする
     glViewport(0, 0, fbWidth, fbHeight);
+
+    // このインスタンスの this ポインタを得る
+    Window *const
+      instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+
+    if (instance != NULL)
+    {
+      // このインスタンスが保持する縦横比を更新する
+      instance->aspect =
+        static_cast<GLfloat>(width) / static_cast<GLfloat>(height);
+    }
   }
+
+  // 縦横比を取り出す
+  GLfloat getAspect() const { return aspect; }
 };
