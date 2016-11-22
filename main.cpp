@@ -267,6 +267,9 @@ int main()
   // 図形データを作成する
   std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
 
+  // タイマーを 0 にセット
+  glfwSetTime(0.0);
+
   // ウィンドウが開いている間繰り返す
   while (window)
   {
@@ -284,7 +287,8 @@ int main()
 
     // モデル変換行列を求める
     const GLfloat *const location(window.getLocation());
-    const Matrix model(Matrix::translate(location[0], location[1], 0.0f));
+    const Matrix r(Matrix::rotate(static_cast<GLfloat>(glfwGetTime()), 0.0f, 1.0f, 0.0f));
+    const Matrix model(Matrix::translate(location[0], location[1], 0.0f) * r);
 
     // ビュー変換行列を求める
     const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
