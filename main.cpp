@@ -257,6 +257,11 @@ int main()
   // 背景色を指定する
   glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
+  // 背面カリングを有効にする
+  glFrontFace(GL_CCW);
+  glCullFace(GL_BACK);
+  glEnable(GL_CULL_FACE);
+
   // プログラムオブジェクトを作成する
   const GLuint program(loadProgram("point.vert", "point.frag"));
 
