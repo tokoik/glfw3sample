@@ -308,6 +308,15 @@ int main()
     // 図形を描画する
     shape->draw();
 
+    // 二つ目のモデルビュー変換行列を求める
+    const Matrix modelview1(modelview * Matrix::translate(0.0f, 0.0f, 3.0f));
+
+    // uniform 変数に値を設定する
+    glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview1.data());
+
+    // 二つ目の図形を描画する
+    shape->draw();
+
     // カラーバッファを入れ替えてイベントを取り出す
     window.swapBuffers();
   }
