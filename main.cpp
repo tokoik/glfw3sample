@@ -262,6 +262,11 @@ int main()
   glCullFace(GL_BACK);
   glEnable(GL_CULL_FACE);
 
+  // デプスバッファを有効にする
+  glClearDepth(1.0);
+  glDepthFunc(GL_LESS);
+  glEnable(GL_DEPTH_TEST);
+
   // プログラムオブジェクトを作成する
   const GLuint program(loadProgram("point.vert", "point.frag"));
 
@@ -279,7 +284,7 @@ int main()
   while (window)
   {
     // ウィンドウを消去する
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // シェーダプログラムの使用開始
     glUseProgram(program);
