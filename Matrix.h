@@ -41,6 +41,20 @@ public:
     return matrix;
   }
 
+  // 法線ベクトルの変換行列を求める
+  void getNormalMatrix(GLfloat *m) const
+  {
+    m[0] = matrix[ 5] * matrix[10] - matrix[ 6] * matrix[ 9];
+    m[1] = matrix[ 6] * matrix[ 8] - matrix[ 4] * matrix[10];
+    m[2] = matrix[ 4] * matrix[ 9] - matrix[ 5] * matrix[ 8];
+    m[3] = matrix[ 9] * matrix[ 2] - matrix[10] * matrix[ 1];
+    m[4] = matrix[10] * matrix[ 0] - matrix[ 8] * matrix[ 2];
+    m[5] = matrix[ 8] * matrix[ 1] - matrix[ 9] * matrix[ 0];
+    m[6] = matrix[ 1] * matrix[ 6] - matrix[ 2] * matrix[ 5];
+    m[7] = matrix[ 2] * matrix[ 4] - matrix[ 0] * matrix[ 6];
+    m[8] = matrix[ 0] * matrix[ 5] - matrix[ 1] * matrix[ 4];
+  }
+
   // 乗算
   //   m: Matrix 型の乗数
   Matrix operator*(const Matrix &m) const
