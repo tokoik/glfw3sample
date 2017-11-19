@@ -19,7 +19,7 @@ void main()
   vec3 L = normalize((Lpos * P.w - P * Lpos.w).xyz);
   Idiff = max(dot(N, L), 0.0) * Kdiff * Ldiff;
   vec3 V = -normalize(P.xyz);
-  vec3 R = reflect(-L, N);
-  Ispec = pow(max(dot(R, V), 0.0), Kshi) * Kspec * Lspec;
+  vec3 H = normalize(L + V);
+  Ispec = pow(max(dot(N, H), 0.0), Kshi) * Kspec * Lspec;
   gl_Position = projection * P;
 }
