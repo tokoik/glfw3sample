@@ -1,4 +1,5 @@
-﻿#include <cstdlib>
+﻿#include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -169,69 +170,6 @@ GLuint loadProgram(const char *vert, const char *frag)
   return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
 
-// 面ごとに法線を変えた六面体の頂点属性
-constexpr Object::Vertex solidCubeVertex[] =
-{
-  // 左
-  { -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f },
-  { -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f },
-  { -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f },
-  { -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f },
-  { -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f },
-  { -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f },
-
-  // 裏
-  {  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-  { -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-  { -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-  {  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-  { -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-  {  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f },
-
-  // 下
-  { -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f },
-  {  1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f },
-  {  1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f },
-  { -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f },
-  {  1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f },
-  { -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f },
-
-  // 右
-  {  1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f },
-  {  1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f },
-  {  1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f },
-  {  1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f },
-  {  1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f },
-  {  1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f },
-
-  // 上
-  { -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f },
-  { -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f },
-  {  1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f },
-  { -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f },
-  {  1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f },
-  {  1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f },
-
-  // 前
-  { -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f },
-  {  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f },
-  {  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f },
-  { -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f },
-  {  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f },
-  { -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f }
-};
-
-// 六面体の面を塗りつぶす三角形の頂点のインデックス
-constexpr GLuint solidCubeIndex[] =
-{
-   0,  1,  2,  3,  4,  5, // 左
-   6,  7,  8,  9, 10, 11, // 裏
-  12, 13, 14, 15, 16, 17, // 下
-  18, 19, 20, 21, 22, 23, // 右
-  24, 25, 26, 27, 28, 29, // 上
-  30, 31, 32, 33, 34, 35  // 前
-};
-
 int main()
 {
   // GLFW を初期化する
@@ -275,8 +213,61 @@ int main()
   const GLint projectionLoc(glGetUniformLocation(program, "projection"));
   const GLint normalMatrixLoc(glGetUniformLocation(program, "normalMatrix"));
 
+  // 球の分割数
+  const int slices(16), stacks(8);
+
+  // 頂点属性を作る
+  std::vector<Object::Vertex> solidSphereVertex;
+
+  for (int j = 0; j <= stacks; ++j)
+  {
+    const float t(static_cast<float>(j) / static_cast<float>(stacks));
+    const float y(cos(3.141593f * t)), r(sin(3.141593f * t));
+
+    for (int i = 0; i <= slices; ++i)
+    {
+      const float s(static_cast<float>(i) / static_cast<float>(slices));
+      const float z(r * cos(6.283185f * s)), x(r * sin(6.283185f * s));
+
+      // 頂点属性
+      const Object::Vertex v = { x, y, z, x, y, z };
+
+      // 頂点属性を追加する
+      solidSphereVertex.emplace_back(v);
+    }
+  }
+
+  // インデックスを作る
+  std::vector<GLuint> solidSphereIndex;
+
+  for (int j = 0; j < stacks; ++j)
+  {
+    const int k((slices + 1) * j);
+
+    for (int i = 0; i < slices; ++i)
+    {
+      // 頂点のインデックス
+      const GLuint k0(k + i);
+      const GLuint k1(k0 + 1);
+      const GLuint k2(k1 + slices);
+      const GLuint k3(k2 + 1);
+
+      // 左下の三角形
+      solidSphereIndex.emplace_back(k0);
+      solidSphereIndex.emplace_back(k2);
+      solidSphereIndex.emplace_back(k3);
+
+      // 右上の三角形
+      solidSphereIndex.emplace_back(k0);
+      solidSphereIndex.emplace_back(k3);
+      solidSphereIndex.emplace_back(k1);
+    }
+  }
+
   // 図形データを作成する
-  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
+  std::unique_ptr<const Shape> shape(new SolidShapeIndex(3,
+    static_cast<GLsizei>(solidSphereVertex.size()), solidSphereVertex.data(),
+    static_cast<GLsizei>(solidSphereIndex.size()), solidSphereIndex.data()));
 
   // タイマーを 0 にセット
   glfwSetTime(0.0);
