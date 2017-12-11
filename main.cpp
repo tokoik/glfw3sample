@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include "Window.h"
 #include "Matrix.h"
+#include "Vector.h"
 #include "Shape.h"
 #include "ShapeIndex.h"
 #include "SolidShapeIndex.h"
@@ -274,7 +275,7 @@ int main()
     static_cast<GLsizei>(solidSphereIndex.size()), solidSphereIndex.data()));
 
   // 光源データ
-  static constexpr GLfloat Lpos[] = { 0.0f, 0.0f, 5.0f, 1.0f };
+  static constexpr Vector Lpos = { 0.0f, 0.0f, 5.0f, 1.0f };
   static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f };
   static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f };
   static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f };
@@ -318,7 +319,7 @@ int main()
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
     glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
     glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
-    glUniform4fv(LposLoc, 1, Lpos);
+    glUniform4fv(LposLoc, 1, (view * Lpos).data());
     glUniform3fv(LambLoc, 1, Lamb);
     glUniform3fv(LdiffLoc, 1, Ldiff);
     glUniform3fv(LspecLoc, 1, Lspec);
