@@ -2,10 +2,10 @@
 uniform mat4 modelview;
 uniform mat4 projection;
 uniform mat3 normalMatrix;
-const vec4 Lpos = vec4(0.0, 0.0, 5.0, 1.0);
-const vec3 Lamb = vec3(0.2);
-const vec3 Ldiff = vec3(1.0);
-const vec3 Lspec = vec3(1.0);
+uniform vec4 Lpos = vec4(0.0, 0.0, 5.0, 1.0);
+uniform vec3 Lamb = vec3(0.2);
+uniform vec3 Ldiff = vec3(1.0);
+uniform vec3 Lspec = vec3(1.0);
 const vec3 Kamb = vec3(0.6, 0.6, 0.2);
 const vec3 Kdiff = vec3(0.6, 0.6, 0.2);
 const vec3 Kspec = vec3(0.3, 0.3, 0.3);
