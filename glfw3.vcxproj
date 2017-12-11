@@ -171,6 +171,7 @@
     <ClInclude Include="ShapeIndex.h" />
     <ClInclude Include="SolidShape.h" />
     <ClInclude Include="SolidShapeIndex.h" />
+    <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

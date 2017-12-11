@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D07C1591FDEBF4300934656 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Vector.h; sourceTree = "<group>"; };
 		7D0AFB481D9D548F00FC004C /* point.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; lineEnding = 0; path = point.frag; sourceTree = "<group>"; };
 		7D0AFB491D9D548F00FC004C /* point.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; lineEnding = 0; path = point.vert; sourceTree = "<group>"; };
 		7D1E90EE1123E36C005E6C75 /* glfw3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glfw3.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +47,7 @@
 				7D24C83914F8F3B500C23BB6 /* main.cpp */,
 				7DC92CC31DC4DFD9001D876D /* Window.h */,
 				7DC92CC41DC4E3B8001D876D /* Matrix.h */,
+				7D07C1591FDEBF4300934656 /* Vector.h */,
 				7DC92CC11DC4DEC6001D876D /* Object.h */,
 				7DC92CC21DC4DEFC001D876D /* Shape.h */,
 				7D8EB8F41DC4EBE5005DBD9B /* ShapeIndex.h */,
