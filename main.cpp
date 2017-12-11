@@ -212,6 +212,10 @@ int main()
   const GLint modelviewLoc(glGetUniformLocation(program, "modelview"));
   const GLint projectionLoc(glGetUniformLocation(program, "projection"));
   const GLint normalMatrixLoc(glGetUniformLocation(program, "normalMatrix"));
+  const GLint LposLoc(glGetUniformLocation(program, "Lpos"));
+  const GLint LambLoc(glGetUniformLocation(program, "Lamb"));
+  const GLint LdiffLoc(glGetUniformLocation(program, "Ldiff"));
+  const GLint LspecLoc(glGetUniformLocation(program, "Lspec"));
 
   // 球の分割数
   const int slices(16), stacks(8);
@@ -269,6 +273,12 @@ int main()
     static_cast<GLsizei>(solidSphereVertex.size()), solidSphereVertex.data(),
     static_cast<GLsizei>(solidSphereIndex.size()), solidSphereIndex.data()));
 
+  // 光源データ
+  static constexpr GLfloat Lpos[] = { 0.0f, 0.0f, 5.0f, 1.0f };
+  static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f };
+  static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f };
+  static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f };
+
   // タイマーを 0 にセット
   glfwSetTime(0.0);
 
@@ -308,6 +318,10 @@ int main()
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
     glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
     glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
+    glUniform4fv(LposLoc, 1, Lpos);
+    glUniform3fv(LambLoc, 1, Lamb);
+    glUniform3fv(LdiffLoc, 1, Ldiff);
+    glUniform3fv(LspecLoc, 1, Lspec);
 
     // 図形を描画する
     shape->draw();
