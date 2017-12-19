@@ -7,10 +7,13 @@ uniform vec4 Lpos[Lcount];
 uniform vec3 Lamb[Lcount];
 uniform vec3 Ldiff[Lcount];
 uniform vec3 Lspec[Lcount];
-const vec3 Kamb = vec3(0.6, 0.6, 0.2);
-const vec3 Kdiff = vec3(0.6, 0.6, 0.2);
-const vec3 Kspec = vec3(0.3, 0.3, 0.3);
-const float Kshi = 30.0;
+layout (std140) uniform Material
+{
+  vec3 Kamb;
+  vec3 Kdiff;
+  vec3 Kspec;
+  float Kshi;
+};
 in vec4 position;
 in vec3 normal;
 out vec3 Idiff;

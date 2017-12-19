@@ -13,6 +13,8 @@
 #include "ShapeIndex.h"
 #include "SolidShapeIndex.h"
 #include "SolidShape.h"
+#include "Uniform.h"
+#include "Material.h"
 
 // シェーダオブジェクトのコンパイル結果を表示する
 //   shader: シェーダオブジェクト名
@@ -218,6 +220,12 @@ int main()
   const GLint LdiffLoc(glGetUniformLocation(program, "Ldiff"));
   const GLint LspecLoc(glGetUniformLocation(program, "Lspec"));
 
+  // uniform block の場所を取得する
+  const GLint materialLoc(glGetUniformBlockIndex(program, "Material"));
+
+  // uniform block の場所を 0 番の結合ポイントに結びつける
+  glUniformBlockBinding(program, materialLoc, 0);
+
   // 球の分割数
   const int slices(16), stacks(8);
 
@@ -281,6 +289,15 @@ int main()
   static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
   static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
 
+  // 色データ
+  static constexpr Material color[] =
+  {
+    //      Kamb               Kdiff              Kspec        Kshi
+    { 0.6f, 0.6f, 0.2f,  0.6f, 0.6f, 0.2f,  0.3f, 0.3f, 0.3f,  30.0f },
+    { 0.1f, 0.1f, 0.5f,  0.1f, 0.1f, 0.5f,  0.4f, 0.4f, 0.4f,  60.0f }
+  };
+  const Uniform<Material> material[] = { &color[0], &color[1] };
+
   // タイマーを 0 にセット
   glfwSetTime(0.0);
 
@@ -327,6 +344,7 @@ int main()
     glUniform3fv(LspecLoc, Lcount, Lspec);
 
     // 図形を描画する
+    material[0].select(0);
     shape->draw();
 
     // 二つ目のモデルビュー変換行列を求める
@@ -340,6 +358,7 @@ int main()
     glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
 
     // 二つ目の図形を描画する
+    material[1].select(0);
     shape->draw();
 
     // カラーバッファを入れ替えてイベントを取り出す
