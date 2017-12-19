@@ -165,12 +165,14 @@
     <None Include="point.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="ShapeIndex.h" />
     <ClInclude Include="SolidShape.h" />
     <ClInclude Include="SolidShapeIndex.h" />
+    <ClInclude Include="Uniform.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
