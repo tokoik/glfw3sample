@@ -13,15 +13,29 @@ class Uniform
     // ユニフォームバッファオブジェクト名
     GLuint ubo;
 
+    // ユニフォームブロックのサイズ
+    GLsizeiptr blocksize;
+
     // コンストラクタ
     //   data: uniform ブロックに格納するデータ
-    UniformBuffer(const T *data)
+    //   count: 確保する uniform ブロックの数
+    UniformBuffer(const T *data, unsigned int count)
     {
+      // ユニフォームブロックのサイズを求める
+      GLint alignment;
+      glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
+      blocksize = (((sizeof (T) - 1) / alignment) + 1) * alignment;
+
       // ユニフォームバッファオブジェクトを作成する
       glGenBuffers(1, &ubo);
       glBindBuffer(GL_UNIFORM_BUFFER, ubo);
       glBufferData(GL_UNIFORM_BUFFER,
-        sizeof (T), data, GL_STATIC_DRAW);
+        count * blocksize, NULL, GL_STATIC_DRAW);
+      for (unsigned int i = 0; i < count; ++i)
+      {
+        glBufferSubData(GL_UNIFORM_BUFFER, i * blocksize,
+          sizeof (T), data + i);
+      }
     }
 
     // デストラクタ
@@ -39,8 +53,9 @@ public:
 
   // コンストラクタ
   //   data: uniform ブロックに格納するデータ
-  Uniform(const T *data = NULL)
-    : buffer(new UniformBuffer(data))
+  //   count: 確保する uniform ブロックの数
+  Uniform(const T *data = NULL, unsigned int count = 1)
+    : buffer(new UniformBuffer(data, count))
   {
   }
 
@@ -51,19 +66,25 @@ public:
 
   // ユニフォームバッファオブジェクトにデータを格納する
   //   data: uniform ブロックに格納するデータ
-  void set(const T *data) const
+  //   start: データを格納する uniform ブロックの先頭位置
+  //   count: データを格納する uniform ブロックの数
+  void set(const T *data, unsigned int start = 0, unsigned int count = 1) const
   {
     glBindBuffer(GL_UNIFORM_BUFFER, buffer->ubo);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0,
-      sizeof (T), data);
+    for (unsigned int i = 0; i < count; ++i)
+    {
+      glBufferSubData(GL_UNIFORM_BUFFER, (start + i) * buffer->blocksize,
+        sizeof (T), data + i);
+    }
   }
 
   // このユニフォームバッファオブジェクトを使用する
   //   bp: 結合ポイント
-  void select(GLuint bp) const
+  //   i: 結合する uniform ブロックの位置
+  void select(GLuint bp, unsigned int i = 0) const
   {
     // 結合ポイントにユニフォームバッファオブジェクトを結合する
-    glBindBufferBase(GL_UNIFORM_BUFFER, bp,
-      buffer->ubo);
+    glBindBufferRange(GL_UNIFORM_BUFFER, bp,
+      buffer->ubo, i * buffer->blocksize, sizeof (T));
   }
 };
