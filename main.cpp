@@ -317,11 +317,15 @@ int main()
     const Matrix projection(Matrix::perspective(fovy, aspect, 1.0f, 10.0f));
 
     // モデル変換行列を求める
-    const GLfloat *const location(window.getLocation());
-    const Matrix r(Matrix::rotate(static_cast<GLfloat>(glfwGetTime()), 0.0f, 1.0f, 0.0f));
-    const Matrix model(Matrix::translate(location[0], location[1], 0.0f) * r);
+    // モデル変換行列を求める
+    GLfloat location[3];
+    GLfloat t{ static_cast<GLfloat>(glfwGetTime()) };
+    location[0] = t;
+    location[1] = 0.0f;
+    location[2] = 0.0f;
+    const Matrix model(Matrix::translate(location[0], location[1], location[2]));
 
-    // ビュー変換行列を求める
+        // ビュー変換行列を求める
     const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
 
     // 法線ベクトルの変換行列の格納先
@@ -345,20 +349,6 @@ int main()
 
     // 図形を描画する
     material.select(0, 0);
-    shape->draw();
-
-    // 二つ目のモデルビュー変換行列を求める
-    const Matrix modelview1(modelview * Matrix::translate(0.0f, 0.0f, 3.0f));
-
-    // 二つ目の法線ベクトルの変換行列を求める
-    modelview1.getNormalMatrix(normalMatrix);
-
-    // uniform 変数に値を設定する
-    glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview1.data());
-    glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
-
-    // 二つ目の図形を描画する
-    material.select(0, 1);
     shape->draw();
 
     // カラーバッファを入れ替えてイベントを取り出す
