@@ -298,6 +298,15 @@ int main()
   };
   const Uniform<Material> material(color, 2);
 
+  // 初期位置
+  const std::array<float, 3> ps{ 0.0f, 0.0f, 0.0f };
+
+  // 初速度
+  const std::array<float, 3> vs{ 1.0f, 5.0f, 1.0f };
+
+  // 加速度
+  const std::array<float, 3> g{ 0.0f, -9.8f, 0.0f };
+
   // タイマーを 0 にセット
   glfwSetTime(0.0);
 
@@ -317,15 +326,14 @@ int main()
     const Matrix projection(Matrix::perspective(fovy, aspect, 1.0f, 10.0f));
 
     // モデル変換行列を求める
-    // モデル変換行列を求める
-    GLfloat location[3];
-    GLfloat t{ static_cast<GLfloat>(glfwGetTime()) };
-    location[0] = t;
-    location[1] = 0.0f;
-    location[2] = 0.0f;
-    const Matrix model(Matrix::translate(location[0], location[1], location[2]));
+    const GLfloat t{ static_cast<GLfloat>(glfwGetTime()) };
+    const float x{ ps[0] + (vs[0] + 0.5f * g[0] * t) * t };
+    const float y{ ps[1] + (vs[1] + 0.5f * g[1] * t) * t };
+    const float z{ ps[2] + (vs[2] + 0.5f * g[2] * t) * t };
+    std::array<GLfloat, 3> p{ x, y, z };
+    const Matrix model(Matrix::translate(p[0], p[1], p[2]));
 
-        // ビュー変換行列を求める
+       // ビュー変換行列を求める
     const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
 
     // 法線ベクトルの変換行列の格納先
